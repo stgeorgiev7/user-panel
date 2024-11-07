@@ -2,6 +2,7 @@ import { fetchUserData } from "../../api/requests";
 import { useEffect, useState } from "react";
 import { userInterface } from "../../types";
 import UserCard from "./UserCard";
+import Skeleton from "../shared/Skeleton";
 
 export default function UserList() {
   const [data, setData] = useState<userInterface[] | null>(null);
@@ -25,12 +26,14 @@ export default function UserList() {
         User List
       </h1>
 
-      <div className="flex flex-col pt-5 gap-5 justify-center content-center w-1/2">
-        {data?.length &&
+      <div className="flex flex-col pt-5 pb-10 gap-5 justify-center content-center w-1/2">
+        {data?.length ? (
           data.map((item: userInterface) => (
             <UserCard key={item.id} {...item} />
-            //add skeleton
-          ))}
+          ))
+        ) : (
+          <Skeleton number={10} />
+        )}
       </div>
     </div>
   );
