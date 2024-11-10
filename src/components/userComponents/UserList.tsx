@@ -1,24 +1,12 @@
-import { fetchUserData } from "../../api/requests";
-import { useEffect, useState } from "react";
-import { userInterface } from "../../types";
+import { UserInterface } from "../../types";
 import UserCard from "./UserCard";
+import EditUserModal from "./EditUserModal";
 import Skeleton from "../shared/Skeleton";
+import { useAppSelector } from "../../hooks";
+import { selectAllUsers } from "../../features/allUsersSlice";
 
 export default function UserList() {
-  const [data, setData] = useState<userInterface[] | null>(null);
-
-  const getUserData = async () => {
-    const items = await fetchUserData();
-    if (items.status === 200) {
-      setData(items.data);
-    } else {
-      console.error("ERROR"); // to be changed
-    }
-  };
-
-  useEffect(() => {
-    getUserData();
-  }, []);
+  const allUsers = useAppSelector(selectAllUsers);
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -27,14 +15,16 @@ export default function UserList() {
       </h1>
 
       <div className="flex flex-col pt-5 pb-10 gap-5 justify-center content-center w-1/2">
-        {data?.length ? (
-          data.map((item: userInterface) => (
+        {allUsers?.length ? (
+          allUsers.map((item: UserInterface) => (
             <UserCard key={item.id} {...item} />
           ))
         ) : (
           <Skeleton number={10} />
         )}
       </div>
+
+      <EditUserModal />
     </div>
   );
 }

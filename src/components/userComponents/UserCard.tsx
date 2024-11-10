@@ -1,16 +1,21 @@
-import { userInterface } from "../../types";
+import { UserInterface } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   updateSelectedUser,
   selectSelectedUser,
 } from "../../features/selectedUserSlice";
+import { updateEditUserModalVisible } from "../../features/editUserModalSlice";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import UserAvatar from "./UserAvatar";
+import Button from "../shared/Button";
+import { useLocation, Link } from "react-router-dom";
 
-export default function UserCard(props: userInterface) {
+export default function UserCard(props: UserInterface) {
   const dispatch = useAppDispatch();
   const selectedUser = useAppSelector(selectSelectedUser);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const location = useLocation();
 
   const expandableVariants = {
     hidden: {
@@ -33,6 +38,10 @@ export default function UserCard(props: userInterface) {
     dispatch(updateSelectedUser(props));
   };
 
+  const handleEditButtonClick = () => {
+    dispatch(updateEditUserModalVisible(true));
+  };
+
   useEffect(() => {
     if (props.id === selectedUser.id) {
       setIsOpen(true);
@@ -42,7 +51,10 @@ export default function UserCard(props: userInterface) {
   }, [selectedUser, props.id]);
 
   return (
-    <div onClick={handleClick} className="rounded-md">
+    <div
+      onClick={handleClick}
+      className="rounded-lg hover:shadow-[0_0_10px_1px_rgba(30,64,175,0.6)] transition-shadow duration-100 ease-in-out"
+    >
       <h2 id="accordion-color-heading-2">
         <button
           type="button"
@@ -53,9 +65,7 @@ export default function UserCard(props: userInterface) {
           }`}
         >
           <div className="avatar placeholder flex gap-5 justify-center items-center">
-            <div className="bg-gray-900 text-neutral-content w-12 h-12 rounded-full flex justify-center items-center">
-              <p>{props.username.charAt(0).toUpperCase()}</p>
-            </div>
+            <UserAvatar username={props.username} />
             <span className="text-lg text-white">{props.username}</span>
           </div>
           <svg
@@ -107,7 +117,25 @@ export default function UserCard(props: userInterface) {
                 {`${props.address.city} ${props.address.street} ${props.address.suite}`}
               </dd>
             </div>
-            <div></div>
+            <div className="flex gap-5 justify-between">
+              <Button
+                text="edit"
+                type="button"
+                color="purple"
+                onClick={handleEditButtonClick}
+                size="big"
+              />
+              {!location.pathname.split("/").includes("posts") && (
+                <Link to={`/posts/${selectedUser.id}`}>
+                  <Button
+                    text="see posts"
+                    type="button"
+                    color="blue"
+                    size="big"
+                  />
+                </Link>
+              )}
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>

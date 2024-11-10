@@ -17,4 +17,10 @@ export const initialState: State = {
       },
     },
   },
+  allUsers: [],
+  components: {
+    editUserModal: {
+      visible: false,
+    },
+  },
 };

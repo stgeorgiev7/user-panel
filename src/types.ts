@@ -1,8 +1,10 @@
 export interface State {
-  selectedUser: userInterface;
+  selectedUser: UserInterface;
+  allUsers: UserInterface[];
+  components: ComponentsInterface;
 }
 
-export interface userInterface {
+export interface UserInterface {
   id: number;
   name: string;
   username: string;
@@ -17,4 +19,19 @@ export interface userInterface {
       lgn?: string;
     };
   };
+}
+
+export interface ComponentsInterface {
+  editUserModal: EditUserModalInterface;
+}
+
+export interface EditUserModalInterface {
+  visible: boolean;
+}
+
+export interface UserPostsInterface {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
 }

@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
 import { initialState } from "../store/initialState";
-import { userInterface } from "../types";
+import { UserInterface } from "../types";
 
 export const selectedUserSlice = createSlice({
   name: "selectedUser",
   initialState: initialState.selectedUser,
   reducers: {
     updateSelectedUser: (
-      state: userInterface,
-      action: PayloadAction<userInterface>
+      state: UserInterface,
+      action: PayloadAction<UserInterface>
     ) => (state = action.payload),
   },
 });
