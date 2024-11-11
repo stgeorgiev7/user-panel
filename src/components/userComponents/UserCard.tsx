@@ -4,7 +4,7 @@ import {
   updateSelectedUser,
   selectSelectedUser,
 } from "../../features/selectedUserSlice";
-import { updateEditUserModalVisible } from "../../features/editUserModalSlice";
+import { updateEditUserModalVisible } from "../../features/componentsSlice";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import UserAvatar from "./UserAvatar";

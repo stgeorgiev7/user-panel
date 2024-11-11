@@ -14,7 +14,7 @@ export default function UserList() {
         User List
       </h1>
 
-      <div className="flex flex-col pt-5 pb-10 gap-5 justify-center content-center w-1/2">
+      <div className="flex flex-col pt-5 pb-10 gap-5 justify-center content-center w-1/2 ">
         {allUsers?.length ? (
           allUsers.map((item: UserInterface) => (
             <UserCard key={item.id} {...item} />

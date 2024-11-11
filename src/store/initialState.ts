@@ -23,5 +23,9 @@ export const initialState: State = {
     editUserModal: {
       visible: false,
     },
+    errorModal: {
+      visible: false,
+      message: null,
+    },
   },
 };

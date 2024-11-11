@@ -1,5 +1,5 @@
 import { UserInterface } from "../../types";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector, useBodyOverflow } from "../../hooks";
 import { useState, ChangeEvent, useEffect, useRef } from "react";
 import {
   selectSelectedUser,
@@ -8,7 +8,7 @@ import {
 import {
   updateEditUserModalVisible,
   selectEditUserModalVisible,
-} from "../../features/editUserModalSlice";
+} from "../../features/componentsSlice";
 import { updateSingleUser } from "../../features/allUsersSlice";
 import Button from "../shared/Button";
 
@@ -18,6 +18,8 @@ export default function EditUserModal() {
   const isOpen = useAppSelector(selectEditUserModalVisible);
   const [newUserData, setNewUserData] = useState<UserInterface>(selectedUser);
   const modalContentRef = useRef<HTMLDivElement | null>(null);
+
+  useBodyOverflow(isOpen);
 
   const handleCancel = () => {
     dispatch(updateEditUserModalVisible(false));

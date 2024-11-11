@@ -1,4 +1,4 @@
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   fetchUserPosts,
   updateUserPost,
@@ -13,8 +13,14 @@ import { UserPostsInterface } from "../../types";
 import { useEffect, useState } from "react";
 import EditPostModal from "./EditUserPostModal";
 import DeletePostModal from "./DeletePostModal";
+import {
+  updateErrorModalMessage,
+  updateErrorModalVisible,
+} from "../../features/componentsSlice";
+import { isAxiosError } from "axios";
 
 export default function UserPostList() {
+  const dispatch = useAppDispatch();
   const [postdata, setPostsData] = useState<UserPostsInterface[]>([]);
   const [selectedPost, setSelectedPost] = useState<UserPostsInterface>({
     id: 0,
@@ -28,50 +34,81 @@ export default function UserPostList() {
   const selectedUser = useAppSelector(selectSelectedUser);
 
   const getUserPosts = async () => {
-    const items = await fetchUserPosts(selectedUser.id);
-    if (items.status === 200) {
-      setPostsData(items.data);
-    } else {
-      console.error("ERROR"); // err modal
+    try {
+      const items = await fetchUserPosts(selectedUser.id);
+      if (items.status === 200) {
+        setPostsData(items.data);
+      }
+    } catch (err) {
+      if (isAxiosError(err)) {
+        dispatch(
+          updateErrorModalMessage(`${err.message} while getting userPosts`)
+        );
+      } else {
+        dispatch(
+          updateErrorModalMessage(
+            "An unexpected error occurred while getting userPosts"
+          )
+        );
+      }
+      dispatch(updateErrorModalVisible(true));
     }
   };
 
   const handleEditPost = async (editedPost: UserPostsInterface) => {
-    const data = await updateUserPost(editedPost);
-    if (data.status === 200) {
-      const updatedUserPost = JSON.parse(data.data.body);
-      setPostsData((prev) =>
-        prev?.map((post) =>
-          post.id === updatedUserPost.id ? updatedUserPost : post
-        )
-      );
-    } else {
-      console.error("ERRPR");
+    try {
+      const data = await updateUserPost(editedPost);
+      if (data.status === 200) {
+        const updatedUserPost = JSON.parse(data.data.body);
+        setPostsData((prev) =>
+          prev?.map((post) =>
+            post.id === updatedUserPost.id ? updatedUserPost : post
+          )
+        );
+      }
+    } catch (err) {
+      if (isAxiosError(err)) {
+        dispatch(
+          updateErrorModalMessage(
+            `${err.message} while edditing ${selectedUser.username} post`
+          )
+        );
+      } else {
+        dispatch(updateErrorModalMessage("An unexpected error occurred"));
+      }
+      dispatch(updateErrorModalVisible(true));
     }
-
     setEditModalOpen(false);
   };
 
   const handleDeletePost = async () => {
-    const data = await deleteUserPost(selectedPost.id);
-
-    if (data.status) {
-      setPostsData((prev) =>
-        prev.filter((post) => post.id !== selectedPost.id)
-      );
-      setDeleteModalOpen(false);
-    } else {
-      console.error("ERROR"); // err modal
+    try {
+      const data = await deleteUserPost(selectedPost.id);
+      if (data.status === 200) {
+        setPostsData((prev) =>
+          prev.filter((post) => post.id !== selectedPost.id)
+        );
+        setDeleteModalOpen(false);
+      }
+    } catch (err) {
+      if (isAxiosError(err)) {
+        dispatch(
+          updateErrorModalMessage(
+            `${err.message} while deleting ${selectedUser.username} post`
+          )
+        );
+      } else {
+        dispatch(updateErrorModalMessage("An unexpected error occurred"));
+      }
+      dispatch(updateErrorModalVisible(true));
     }
+
+    setDeleteModalOpen(false);
   };
 
   useEffect(() => {
     getUserPosts();
   }, []);
-
-  useEffect(() => {
-    console.log(postdata);
-  }, [postdata]);
 
   return (
     <div className="flex flex-col justify-center items-center">

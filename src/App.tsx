@@ -8,25 +8,45 @@ import { useEffect } from "react";
 import { useAppDispatch } from "./hooks";
 import { updateAllUsers } from "./features/allUsersSlice";
 import { updateAllTasks } from "./features/tasksSlice";
+import ErrorModal from "./components/shared/ErrorModal";
+import {
+  updateErrorModalVisible,
+  updateErrorModalMessage,
+} from "./features/componentsSlice";
+import { isAxiosError } from "axios";
 
 function App() {
   const dispatch = useAppDispatch();
 
   const getUserData = async () => {
-    const items = await fetchUserData();
-    if (items.status === 200) {
-      dispatch(updateAllUsers(items.data));
-    } else {
-      console.error("ERROR"); // to be changed
+    try {
+      const items = await fetchUserData();
+      if (items.status === 200) {
+        dispatch(updateAllUsers(items.data));
+      }
+    } catch (err) {
+      if (isAxiosError(err)) {
+        dispatch(updateErrorModalMessage(`${err.message} `));
+      } else {
+        dispatch(updateErrorModalMessage("An unexpected error occurred"));
+      }
+      dispatch(updateErrorModalVisible(true));
     }
   };
 
   const getTaskData = async () => {
-    const items = await fetchTaskData();
-    if (items.status === 200) {
-      dispatch(updateAllTasks(items.data));
-    } else {
-      console.error("ERROR"); //err modal
+    try {
+      const items = await fetchTaskData();
+      if (items.status === 200) {
+        dispatch(updateAllTasks(items.data));
+      }
+    } catch (err) {
+      if (isAxiosError(err)) {
+        dispatch(updateErrorModalMessage(err.message));
+      } else {
+        dispatch(updateErrorModalMessage("An unexpected error occurred"));
+      }
+      dispatch(updateErrorModalVisible(true));
     }
   };
 
@@ -46,6 +66,7 @@ function App() {
           <Route path="/tasks" element={<TaskList />} />
         </Routes>
       </Router>
+      <ErrorModal />
     </div>
   );
 }

@@ -1,18 +1,25 @@
-import Button from "../shared/Button";
-import { useBodyOverflow } from "../../hooks";
+import Button from "./Button";
+import { useBodyOverflow, useAppDispatch, useAppSelector } from "../../hooks";
+import {
+  selectErrorModalMessage,
+  selectErrorModalVisible,
+  updateErrorModalVisible,
+} from "../../features/componentsSlice";
 
-interface DeletePostModalInterface {
-  isOpen: boolean;
-  onDelete: () => void;
-  onCancel: () => void;
-}
+export default function ErrorModal() {
+  const dispatch = useAppDispatch();
+  const isOpen = useAppSelector(selectErrorModalVisible);
+  const errorMessage = useAppSelector(selectErrorModalMessage);
 
-export default function DeletePostModal(props: DeletePostModalInterface) {
-  useBodyOverflow(props.isOpen);
+  useBodyOverflow(isOpen);
+
+  const handleClose = () => {
+    dispatch(updateErrorModalVisible(false));
+  };
   return (
     <div
       className={`${
-        props.isOpen ? "visible" : "hidden"
+        isOpen ? "visible" : "hidden"
       } overflow-y-auto flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-100% max-h-full bg-indigo-50/5 backdrop-blur-sm`}
     >
       <div className="relative p-4 w-full max-w-md max-h-full">
@@ -34,23 +41,14 @@ export default function DeletePostModal(props: DeletePostModalInterface) {
               />
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this post?
+              {errorMessage ? errorMessage : "Something went wrong"}
             </h3>
 
-            <div className="flex justify-center gap-5">
+            <div className="flex justify-center">
               <Button
                 color="red"
-                onClick={props.onDelete}
-                text="Delete"
-                size="small"
-                type="button"
-              />
-
-              <Button
-                color="dark"
-                onClick={props.onCancel}
-                text="cancel"
-                outlined
+                onClick={handleClose}
+                text="Continue"
                 size="small"
                 type="button"
               />

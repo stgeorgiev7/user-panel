@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import selectedUserReducer from "../features/selectedUserSlice";
 import allUsersReducer from "../features/allUsersSlice";
-import editUserModalReducer from "../features/editUserModalSlice";
+import componentsReducer from "../features/componentsSlice";
 import taskSliceReducer from "../features/tasksSlice";
 
 const store = configureStore({
   reducer: {
     selectedUser: selectedUserReducer,
     allUsers: allUsersReducer,
-    editUserModal: editUserModalReducer,
+    components: componentsReducer,
     tasks: taskSliceReducer,
   },
 });

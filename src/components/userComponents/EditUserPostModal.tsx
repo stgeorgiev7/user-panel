@@ -2,6 +2,7 @@ import { UserPostsInterface } from "../../types";
 import UserPostCard from "./UserPostCard";
 import { useState, ChangeEvent, useEffect, useRef } from "react";
 import Button from "../shared/Button";
+import { useBodyOverflow } from "../../hooks";
 
 interface EditUserModalInterface {
   isOpen: boolean;
@@ -17,6 +18,8 @@ export default function EditPostModal(props: EditUserModalInterface) {
   const [editedPostData, setEditedPostData] = useState<UserPostsInterface>(
     props.post
   );
+
+  useBodyOverflow(props.isOpen);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -50,15 +53,11 @@ export default function EditPostModal(props: EditUserModalInterface) {
     setEditedPostData(props.post);
   }, [props.post]);
 
-  useEffect(() => {
-    console.log(editedPostData);
-  }, [editedPostData]);
-
   return (
     <div
       className={`${
         props.isOpen ? "visible" : "hidden"
-      } overflow-y-auto flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-indigo-50/5 backdrop-blur-sm`}
+      } overflow-y-auto flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-100% max-h-full bg-indigo-50/5 backdrop-blur-sm`}
     >
       <div
         className="relative p-4 w-full max-w-md max-h-full"

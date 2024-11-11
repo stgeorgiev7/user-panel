@@ -24,10 +24,16 @@ export interface UserInterface {
 
 export interface ComponentsInterface {
   editUserModal: EditUserModalInterface;
+  errorModal: ErrorModalInterface;
 }
 
 export interface EditUserModalInterface {
   visible: boolean;
+}
+
+export interface ErrorModalInterface {
+  visible: boolean;
+  message: string | null;
 }
 
 export interface UserPostsInterface {
