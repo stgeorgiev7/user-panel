@@ -21,3 +21,7 @@ export const updateUserPost = (post: UserPostsInterface) => {
 export const deleteUserPost = (postId: number) => {
   return axios.delete(baseUrl + "posts/" + postId);
 };
+
+export const fetchTaskData = () => {
+  return axios.get(baseUrl + "todos");
+};

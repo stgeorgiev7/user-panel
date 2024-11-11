@@ -12,13 +12,7 @@ export const allUsersSlice = createSlice({
 
     updateSingleUser: (state, action: PayloadAction<UserInterface>) => {
       const updatedUser = action.payload;
-      // const index = state.findIndex((user) => user.id === updatedUser.id);
-      // if (index !== -1) {
-      //   state[index] = {
-      //     ...state[index],
-      //     ...updatedUser,
-      //   };
-      // }
+
       return state.map((user) =>
         user.id === updatedUser.id ? { ...user, ...updatedUser } : user
       );

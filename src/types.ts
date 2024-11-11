@@ -1,6 +1,7 @@
 export interface State {
   selectedUser: UserInterface;
   allUsers: UserInterface[];
+  tasks: TaskInterface[];
   components: ComponentsInterface;
 }
 
@@ -34,4 +35,11 @@ export interface UserPostsInterface {
   id: number;
   title: string;
   body: string;
+}
+
+export interface TaskInterface {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
 }

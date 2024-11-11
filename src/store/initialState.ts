@@ -18,6 +18,7 @@ export const initialState: State = {
     },
   },
   allUsers: [],
+  tasks: [],
   components: {
     editUserModal: {
       visible: false,

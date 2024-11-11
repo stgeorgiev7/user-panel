@@ -31,7 +31,6 @@ export default function UserPostList() {
     const items = await fetchUserPosts(selectedUser.id);
     if (items.status === 200) {
       setPostsData(items.data);
-      console.log(postdata);
     } else {
       console.error("ERROR"); // err modal
     }
