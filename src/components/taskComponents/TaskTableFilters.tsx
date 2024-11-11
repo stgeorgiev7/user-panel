@@ -1,5 +1,5 @@
 import { UserInterface } from "../../types";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 
 interface TaskTableFiltersInterface {
   onUserSelect: (value: number | null) => void;
@@ -15,7 +15,20 @@ export default function TaskTableFilter(props: TaskTableFiltersInterface) {
 
   return (
     <div className="flex gap-5 w-full justify-end relative">
-      <div className="text-blue-200">Input</div>
+      <div className="text-blue-200">
+        <input
+          type="email"
+          name="username"
+          id="email"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1.5 px-4  dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white outline-none"
+          placeholder="Filter by title"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            e.target.value.length > 0
+              ? props.onTitle(e.target.value)
+              : props.onTitle(null)
+          }
+        />
+      </div>
 
       <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4">
         <div className="relative">
@@ -26,10 +39,10 @@ export default function TaskTableFilter(props: TaskTableFiltersInterface) {
             type="button"
             onClick={() => setCompletedFilterOpened(!completedFilterOpened)}
           >
-            <span>Filter by completed</span>
+            <span>Filter by Completion</span>
             <svg
               className={`w-3 h-3 transform transition-transform duration-500 ease-in-out ${
-                useFilterOpened ? "rotate-180" : "rotate-0"
+                completedFilterOpened ? "rotate-180" : "rotate-0"
               }`}
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +61,7 @@ export default function TaskTableFilter(props: TaskTableFiltersInterface) {
           <div
             id="dropdownAction"
             className={`${
-              useFilterOpened ? "visible" : "hidden"
+              completedFilterOpened ? "visible" : "hidden"
             } absolute right-0 mt-2 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
           >
             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">

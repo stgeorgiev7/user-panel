@@ -1,5 +1,5 @@
 import { TaskInterface } from "../../types";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useAppSelector } from "../../hooks";
 import { selectAllTasks } from "../../features/tasksSlice";
 import { useEffect, useState } from "react";
 import TaskTable from "./TaskTable";
@@ -10,7 +10,6 @@ import { selectAllUsers } from "../../features/allUsersSlice";
 export default function TaskList() {
   const taskData = useAppSelector(selectAllTasks);
   const users = useAppSelector(selectAllUsers);
-  const dispatch = useAppDispatch();
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState<{
     userId: number | null;
@@ -26,7 +25,8 @@ export default function TaskList() {
     const matchedUser = filter.userId === null || task.userId === filter.userId;
     const matchesCompleted =
       filter.completed === null || task.completed === filter.completed;
-    const matchesTitle = filter.title === null || task.title === filter.title;
+    const matchesTitle =
+      filter.title === null || task.title.includes(filter.title);
 
     return matchedUser && matchesCompleted && matchesTitle;
   });
@@ -40,24 +40,28 @@ export default function TaskList() {
     setFilter((prev) => ({ ...prev, userId: value }));
   };
 
-  const handlCompletedilter = (value: boolean | null) => {
+  const handlCompletedFilter = (value: boolean | null) => {
     setFilter((prev) => ({ ...prev, completed: value }));
   };
+
+  const handleTitleFilter = (value: string | null) => {
+    setFilter((prev) => ({ ...prev, title: value }));
+  };
+
   useEffect(() => {
     handlePagination();
   }, [taskData]);
 
-  useEffect(() => {
-    console.log(filter);
-  }, [filter]);
-
   return (
-    <div className="flex flex-col gap-5 justify-center items-center">
-      <h2 className="text-4xl text-white py-8">Task List</h2>
+    <div className="flex flex-col gap-5 justify-center items-center pb-8">
+      <h1 className="text-5xl p-5 text-white text-center w-full font-bold">
+        Tasks
+      </h1>
       <TaskTableFilter
         userOptions={users}
         onUserSelect={handleUserFilter}
-        onCompletedSelect={handlCompletedilter}
+        onCompletedSelect={handlCompletedFilter}
+        onTitle={handleTitleFilter}
       />
       <TaskTable tasks={handlePagination()} users={users} />
       <TablePagination

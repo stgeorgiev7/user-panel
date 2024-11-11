@@ -83,7 +83,7 @@ export default function UserPostList() {
         <UserCard {...selectedUser} />
       </div>
 
-      <div className="grid grid-rows-4 grid-flow-col gap-5 pb-8">
+      <div className="grid grid-cols-3 gap-5 pb-8">
         {postdata?.length ? (
           postdata.map((post: UserPostsInterface) => (
             <UserPostCard

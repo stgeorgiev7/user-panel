@@ -24,7 +24,7 @@ export default function TablePagination(props: TablePaginationInterface) {
   );
 
   return (
-    <nav className="pt-10">
+    <nav className="pt-2">
       <ul className="inline-flex items-center gap-2 text-base h-10">
         <li
           onClick={() => onPageSelect(currentPage - 1)}
