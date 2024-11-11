@@ -7,8 +7,10 @@ export const allUsersSlice = createSlice({
   name: "allUsers",
   initialState: initialState.allUsers,
   reducers: {
-    updateAllUsers: (state, action: PayloadAction<UserInterface[]>) =>
-      (state = action.payload),
+    updateAllUsers: (state, action: PayloadAction<UserInterface[]>) => {
+      state = action.payload;
+      return state;
+    },
 
     updateSingleUser: (state, action: PayloadAction<UserInterface>) => {
       const updatedUser = action.payload;
