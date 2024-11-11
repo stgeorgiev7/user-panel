@@ -44,7 +44,7 @@ export default function Button(props: Buttoninterface) {
     <button
       className={`${getColor()} ${getSize()} capitalize ${
         props.disabled && `opacity-50 pointer-events-none`
-      }`}
+      } active:scale-95`}
       type={props.type}
       onClick={props.onClick}
       disabled={props.disabled}

@@ -7,10 +7,8 @@ export const selectedUserSlice = createSlice({
   name: "selectedUser",
   initialState: initialState.selectedUser,
   reducers: {
-    updateSelectedUser: (
-      state: UserInterface,
-      action: PayloadAction<UserInterface>
-    ) => (state = action.payload),
+    updateSelectedUser: (state, action: PayloadAction<UserInterface>) =>
+      (state = action.payload),
   },
 });
 

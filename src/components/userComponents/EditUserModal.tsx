@@ -1,3 +1,4 @@
+import ModalWrapper from "../shared/ModalWrapper";
 import { UserInterface } from "../../types";
 import { useAppDispatch, useAppSelector, useBodyOverflow } from "../../hooks";
 import { useState, ChangeEvent, useEffect, useRef } from "react";
@@ -75,11 +76,7 @@ export default function EditUserModal() {
   }, [isOpen]);
 
   return (
-    <div
-      className={`${
-        isOpen ? "visible" : "hidden"
-      } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-2 flex justify-center items-center w-full md:inset-0 h-100% max-h-full bg-indigo-50/5 backdrop-blur-sm`}
-    >
+    <ModalWrapper isOpen={isOpen}>
       <div
         className="relative p-4 w-full max-w-[500px] max-h-full z-3"
         ref={modalContentRef}
@@ -191,6 +188,6 @@ export default function EditUserModal() {
           </div>
         </div>
       </div>
-    </div>
+    </ModalWrapper>
   );
 }

@@ -1,3 +1,4 @@
+import ModalWrapper from "../shared/ModalWrapper";
 import { UserPostsInterface } from "../../types";
 import UserPostCard from "./UserPostCard";
 import { useState, ChangeEvent, useEffect, useRef } from "react";
@@ -54,11 +55,7 @@ export default function EditPostModal(props: EditUserModalInterface) {
   }, [props.post]);
 
   return (
-    <div
-      className={`${
-        props.isOpen ? "visible" : "hidden"
-      } overflow-y-auto flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-100% max-h-full bg-indigo-50/5 backdrop-blur-sm`}
-    >
+    <ModalWrapper isOpen={props.isOpen}>
       <div
         className="relative p-4 w-full max-w-md max-h-full"
         ref={modalContentRef}
@@ -132,6 +129,6 @@ export default function EditPostModal(props: EditUserModalInterface) {
           </form>
         </div>
       </div>
-    </div>
+    </ModalWrapper>
   );
 }

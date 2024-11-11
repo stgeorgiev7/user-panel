@@ -1,5 +1,6 @@
 import Button from "../shared/Button";
 import { useBodyOverflow } from "../../hooks";
+import ModalWrapper from "../shared/ModalWrapper";
 
 interface DeletePostModalInterface {
   isOpen: boolean;
@@ -10,11 +11,7 @@ interface DeletePostModalInterface {
 export default function DeletePostModal(props: DeletePostModalInterface) {
   useBodyOverflow(props.isOpen);
   return (
-    <div
-      className={`${
-        props.isOpen ? "visible" : "hidden"
-      } overflow-y-auto flex fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-100% max-h-full bg-indigo-50/5 backdrop-blur-sm`}
-    >
+    <ModalWrapper isOpen={props.isOpen}>
       <div className="relative p-4 w-full max-w-md max-h-full">
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div className="p-4 md:p-5 text-center">
@@ -27,9 +24,9 @@ export default function DeletePostModal(props: DeletePostModalInterface) {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
@@ -58,6 +55,6 @@ export default function DeletePostModal(props: DeletePostModalInterface) {
           </div>
         </div>
       </div>
-    </div>
+    </ModalWrapper>
   );
 }

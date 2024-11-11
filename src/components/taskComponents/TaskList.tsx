@@ -66,7 +66,7 @@ export default function TaskList() {
       <TaskTable tasks={handlePagination()} users={users} />
       <TablePagination
         onPageSelect={setPage}
-        pageNumbers={filteredTasks.length / 10}
+        pageNumbers={Math.trunc(filteredTasks.length / 10)}
         currentPage={page}
       />
     </div>

@@ -47,7 +47,7 @@ export default function TablePagination(props: TablePaginationInterface) {
             1
           </li>
         )}
-        {startPage > 2 && <span className="px-1">...</span>}
+        {startPage > 2 && <span className="px-1 text-white">...</span>}
 
         {pagesToDisplay.map((page) => (
           <li
@@ -66,7 +66,9 @@ export default function TablePagination(props: TablePaginationInterface) {
           </li>
         ))}
 
-        {endPage < pageNumbers - 1 && <span className="px-1">...</span>}
+        {endPage < pageNumbers - 1 && (
+          <span className="px-1 text-white">...</span>
+        )}
         {endPage < pageNumbers && (
           <li
             onClick={() => onPageSelect(pageNumbers)}
