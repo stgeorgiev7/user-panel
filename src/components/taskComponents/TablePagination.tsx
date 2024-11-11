@@ -30,11 +30,10 @@ export default function TablePagination(props: TablePaginationInterface) {
           onClick={() => onPageSelect(currentPage - 1)}
           className={`flex items-center justify-center px-4 h-10 leading-tight 
               ${
-                currentPage === 1
+                currentPage === 1 || pageNumbers === 0
                   ? "text-gray-300 pointer-events-none opacity-30"
                   : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white rounded-lg cursor-pointer"
-              }
-            `}
+              }`}
         >
           Previous
         </li>
@@ -82,7 +81,7 @@ export default function TablePagination(props: TablePaginationInterface) {
           onClick={() => onPageSelect(currentPage + 1)}
           className={`flex items-center justify-center px-4 h-10 leading-tight 
               ${
-                currentPage === pageNumbers
+                currentPage === pageNumbers || pageNumbers === 0
                   ? "text-gray-300 pointer-events-none opacity-30"
                   : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white rounded-lg cursor-pointer"
               }
