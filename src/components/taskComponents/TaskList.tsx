@@ -40,6 +40,9 @@ export default function TaskList() {
     setFilter((prev) => ({ ...prev, userId: value }));
   };
 
+  const handlCompletedilter = (value: boolean | null) => {
+    setFilter((prev) => ({ ...prev, completed: value }));
+  };
   useEffect(() => {
     handlePagination();
   }, [taskData]);
@@ -51,7 +54,11 @@ export default function TaskList() {
   return (
     <div className="flex flex-col gap-5 justify-center items-center">
       <h2 className="text-4xl text-white py-8">Task List</h2>
-      <TaskTableFilter userOptions={users} onUserSelect={handleUserFilter} />
+      <TaskTableFilter
+        userOptions={users}
+        onUserSelect={handleUserFilter}
+        onCompletedSelect={handlCompletedilter}
+      />
       <TaskTable tasks={handlePagination()} users={users} />
       <TablePagination
         onPageSelect={setPage}
