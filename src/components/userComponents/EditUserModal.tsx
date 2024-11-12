@@ -17,8 +17,10 @@ export default function EditUserModal() {
   const dispatch = useAppDispatch();
   const selectedUser = useAppSelector(selectSelectedUser);
   const isOpen = useAppSelector(selectEditUserModalVisible);
-  const [newUserData, setNewUserData] = useState<UserInterface>(selectedUser);
+  const [newUserData, setNewUserData] = useState<UserInterface | null>(null);
   const modalContentRef = useRef<HTMLDivElement | null>(null);
+  const [submitButtonClicked, setSubmitButtonClicked] =
+    useState<boolean>(false);
 
   useBodyOverflow(isOpen);
 
@@ -32,22 +34,28 @@ export default function EditUserModal() {
 
     if (name.startsWith("address.")) {
       const addressField = name.split(".")[1];
-      setNewUserData((prev) => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          [addressField]: value,
-        },
-      }));
+      setNewUserData(
+        (prev) =>
+          prev && {
+            ...prev,
+            address: {
+              ...prev.address,
+              [addressField]: value,
+            },
+          }
+      );
     } else {
-      setNewUserData((prev) => ({ ...prev, [name]: value }));
+      setNewUserData((prev) => prev && { ...prev, [name]: value });
     }
   };
 
   const handleSubmit = () => {
-    dispatch(updateSingleUser(newUserData));
-    dispatch(updateSelectedUser(newUserData));
-    dispatch(updateEditUserModalVisible(false));
+    if (newUserData) {
+      dispatch(updateSingleUser(newUserData));
+      dispatch(updateSelectedUser(newUserData));
+      dispatch(updateEditUserModalVisible(false));
+      setSubmitButtonClicked(true);
+    }
   };
 
   useEffect(() => {
@@ -72,6 +80,7 @@ export default function EditUserModal() {
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      setSubmitButtonClicked(false);
     };
   }, [isOpen]);
 
@@ -85,7 +94,7 @@ export default function EditUserModal() {
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
               Edit user{" "}
-              <span className="text-blue-500">@{selectedUser.username}</span>
+              <span className="text-blue-500">@{selectedUser?.username}</span>
             </h3>
           </div>
 
@@ -100,8 +109,8 @@ export default function EditUserModal() {
                   name="username"
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white outline-none"
-                  placeholder={selectedUser.username}
-                  value={newUserData.username}
+                  placeholder={selectedUser?.username}
+                  value={newUserData?.username}
                   required
                   onChange={handleChange}
                 />
@@ -113,8 +122,8 @@ export default function EditUserModal() {
                 <input
                   type="text"
                   name="name"
-                  placeholder={selectedUser.name}
-                  value={newUserData.name}
+                  placeholder={selectedUser?.name}
+                  value={newUserData?.name}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white outline-none"
                   required
                   onChange={handleChange}
@@ -130,8 +139,8 @@ export default function EditUserModal() {
                 <input
                   type="text"
                   name="address.city"
-                  placeholder={selectedUser.address.city}
-                  value={newUserData.address.city}
+                  placeholder={selectedUser?.address.city}
+                  value={newUserData?.address.city}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white outline-none"
                   required
                   onChange={handleChange}
@@ -144,8 +153,8 @@ export default function EditUserModal() {
                 <input
                   type="text"
                   name="address.street"
-                  placeholder={selectedUser.address.street}
-                  value={newUserData.address.street}
+                  placeholder={selectedUser?.address.street}
+                  value={newUserData?.address.street}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white outline-none"
                   required
                   onChange={handleChange}
@@ -158,8 +167,8 @@ export default function EditUserModal() {
                 <input
                   type="text"
                   name="address.suite"
-                  placeholder={selectedUser.address.suite}
-                  value={newUserData.address.suite}
+                  placeholder={selectedUser?.address.suite}
+                  value={newUserData?.address.suite}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white outline-none"
                   required
                   onChange={handleChange}
@@ -180,7 +189,7 @@ export default function EditUserModal() {
                   type="button"
                   color="blue"
                   size="medium"
-                  disabled={newUserData === selectedUser ? true : false}
+                  disabled={newUserData === selectedUser || submitButtonClicked}
                   onClick={handleSubmit}
                 />
               </div>

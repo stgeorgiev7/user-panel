@@ -19,6 +19,7 @@ export default function EditPostModal(props: EditUserModalInterface) {
   const [editedPostData, setEditedPostData] = useState<UserPostsInterface>(
     props.post
   );
+  const [editButtonClicked, setEditBluttonClicked] = useState<boolean>(false);
 
   useBodyOverflow(props.isOpen);
 
@@ -47,6 +48,7 @@ export default function EditPostModal(props: EditUserModalInterface) {
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      setEditBluttonClicked(false);
     };
   }, [props.isOpen]);
 
@@ -122,8 +124,11 @@ export default function EditPostModal(props: EditUserModalInterface) {
                 type="button"
                 color="blue"
                 size="small"
-                disabled={props.post === editedPostData ? true : false}
-                onClick={() => props.onEdit(editedPostData)}
+                disabled={props.post === editedPostData || editButtonClicked}
+                onClick={() => {
+                  props.onEdit(editedPostData);
+                  setEditBluttonClicked(true);
+                }}
               />
             </div>
           </form>

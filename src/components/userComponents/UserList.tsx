@@ -1,12 +1,19 @@
 import { UserInterface } from "../../types";
+import { useEffect } from "react";
 import UserCard from "./UserCard";
 import EditUserModal from "./EditUserModal";
 import Skeleton from "../shared/Skeleton";
-import { useAppSelector } from "../../hooks";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { updateSelectedUser } from "../../features/selectedUserSlice";
 import { selectAllUsers } from "../../features/allUsersSlice";
 
 export default function UserList() {
+  const dispatch = useAppDispatch();
   const allUsers = useAppSelector(selectAllUsers);
+
+  useEffect(() => {
+    dispatch(updateSelectedUser(null));
+  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center">

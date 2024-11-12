@@ -1,5 +1,5 @@
 export interface State {
-  selectedUser: UserInterface;
+  selectedUser: UserInterface | null;
   allUsers: UserInterface[];
   tasks: TaskInterface[];
   components: ComponentsInterface;
@@ -48,4 +48,10 @@ export interface TaskInterface {
   id: number;
   title: string;
   completed: boolean;
+}
+
+export interface TaskFilterInterface {
+  userId: number | null;
+  completed: boolean | null;
+  title: string | null;
 }

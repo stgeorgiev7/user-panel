@@ -1,4 +1,4 @@
-import { TaskInterface } from "../../types";
+import { TaskInterface, TaskFilterInterface } from "../../types";
 import { useAppSelector } from "../../hooks";
 import { selectAllTasks } from "../../features/tasksSlice";
 import { useEffect, useState } from "react";
@@ -11,22 +11,20 @@ export default function TaskList() {
   const taskData = useAppSelector(selectAllTasks);
   const users = useAppSelector(selectAllUsers);
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState<{
-    userId: number | null;
-    completed: boolean | null;
-    title: string | null;
-  }>({
+  const [filters, setFilter] = useState<TaskFilterInterface>({
     userId: null,
     completed: null,
     title: null,
   });
+  const [taskTableReady, setTaskTableReady] = useState<boolean>(false);
 
   const filteredTasks = taskData.filter((task: TaskInterface) => {
-    const matchedUser = filter.userId === null || task.userId === filter.userId;
+    const matchedUser =
+      filters.userId === null || task.userId === filters.userId;
     const matchesCompleted =
-      filter.completed === null || task.completed === filter.completed;
+      filters.completed === null || task.completed === filters.completed;
     const matchesTitle =
-      filter.title === null || task.title.includes(filter.title);
+      filters.title === null || task.title.includes(filters.title);
 
     return matchedUser && matchesCompleted && matchesTitle;
   });
@@ -52,23 +50,40 @@ export default function TaskList() {
     handlePagination();
   }, [taskData]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTaskTableReady(true);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="flex flex-col gap-5 justify-center items-center pb-8">
       <h1 className="text-5xl p-5 text-white text-center w-full font-bold">
         Tasks
       </h1>
-      <TaskTableFilter
-        userOptions={users}
-        onUserSelect={handleUserFilter}
-        onCompletedSelect={handlCompletedFilter}
-        onTitle={handleTitleFilter}
+      {taskTableReady && (
+        <TaskTableFilter
+          userOptions={users}
+          onUserSelect={handleUserFilter}
+          onCompletedSelect={handlCompletedFilter}
+          onTitle={handleTitleFilter}
+          currentFilters={filters}
+        />
+      )}
+      <TaskTable
+        tasks={handlePagination()}
+        users={users}
+        ready={taskTableReady}
       />
-      <TaskTable tasks={handlePagination()} users={users} />
-      <TablePagination
-        onPageSelect={setPage}
-        pageNumbers={Math.trunc(filteredTasks.length / 10)}
-        currentPage={page}
-      />
+      {taskTableReady && (
+        <TablePagination
+          onPageSelect={setPage}
+          pageNumbers={Math.trunc(filteredTasks.length / 10)}
+          currentPage={page}
+        />
+      )}
     </div>
   );
 }

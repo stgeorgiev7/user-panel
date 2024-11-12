@@ -1,11 +1,13 @@
 import { UserInterface } from "../../types";
 import { useState, ChangeEvent } from "react";
+import { TaskFilterInterface } from "../../types";
 
 interface TaskTableFiltersInterface {
   onUserSelect: (value: number | null) => void;
   userOptions: UserInterface[];
   onCompletedSelect: (value: boolean | null) => void;
   onTitle: (value: string | null) => void;
+  currentFilters: TaskFilterInterface;
 }
 
 export default function TaskTableFilter(props: TaskTableFiltersInterface) {
@@ -64,9 +66,11 @@ export default function TaskTableFilter(props: TaskTableFiltersInterface) {
               completedFilterOpened ? "visible" : "hidden"
             } absolute right-0 mt-2 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
           >
-            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
               <li
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                className={`${
+                  props.currentFilters.completed && "bg-blue-600"
+                } block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer `}
                 onClick={() => {
                   setCompletedFilterOpened(false);
                   props.onCompletedSelect(true);
@@ -76,7 +80,9 @@ export default function TaskTableFilter(props: TaskTableFiltersInterface) {
               </li>
 
               <li
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                className={`${
+                  props.currentFilters.completed === false && "bg-blue-600"
+                } block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer `}
                 onClick={() => {
                   setCompletedFilterOpened(false);
                   props.onCompletedSelect(false);
@@ -131,10 +137,12 @@ export default function TaskTableFilter(props: TaskTableFiltersInterface) {
               useFilterOpened ? "visible" : "hidden"
             } absolute right-0 mt-2 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
           >
-            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
               {props.userOptions.map((user) => (
                 <li
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+                  className={`${
+                    props.currentFilters.userId === user.id && "bg-blue-600"
+                  } block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer `}
                   key={user.id}
                   onClick={() => {
                     setUserFilterOpened(false);

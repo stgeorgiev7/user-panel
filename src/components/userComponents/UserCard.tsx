@@ -43,7 +43,7 @@ export default function UserCard(props: UserInterface) {
   };
 
   useEffect(() => {
-    if (props.id === selectedUser.id) {
+    if (props.id === selectedUser?.id) {
       setIsOpen(true);
     } else {
       setIsOpen(false);
@@ -60,7 +60,7 @@ export default function UserCard(props: UserInterface) {
           type="button"
           className={`flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border  border-gray-200 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3 rounded-md ${
             isOpen
-              ? "border-b-0 bg-blue-800 rounded-b-none dark:hover:bg-blue-800"
+              ? "border-b-0 bg-blue-800 rounded-b-none dark:hover:bg-blue-800 cursor-default"
               : "border-b-1"
           }`}
         >
@@ -126,7 +126,7 @@ export default function UserCard(props: UserInterface) {
                 size="big"
               />
               {!location.pathname.split("/").includes("posts") && (
-                <Link to={`/posts/${selectedUser.id}`}>
+                <Link to={`/posts/${selectedUser?.id}`}>
                   <Button
                     text="see posts"
                     type="button"

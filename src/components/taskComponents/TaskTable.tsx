@@ -7,6 +7,7 @@ import { updateTaskCompletion } from "../../features/tasksSlice";
 interface TaskTableInterface {
   tasks: TaskInterface[];
   users: UserInterface[];
+  ready: boolean;
 }
 
 export default function TaskTable(props: TaskTableInterface) {
@@ -30,14 +31,14 @@ export default function TaskTable(props: TaskTableInterface) {
           </tr>
         </thead>
         <tbody>
-          {props?.tasks?.length === 0 ? (
+          {!props.ready && (
             <tr>
               <td colSpan={5}>
                 <div className="w-full flex justify-center py-5">
                   <svg
                     aria-hidden="true"
                     role="status"
-                    className="inline w-20 h-20 me-3 text-blue animate-spin"
+                    className="inline w-16 h-16 me-3 text-blue animate-spin"
                     viewBox="0 0 100 101"
                     fill=""
                     xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +55,17 @@ export default function TaskTable(props: TaskTableInterface) {
                 </div>
               </td>
             </tr>
+          )}
+          {props?.tasks?.length === 0 ? (
+            <tr>
+              <td colSpan={5}>
+                <div className="w-full flex justify-center py-5 bg-gray-800 text-lg">
+                  No tasks
+                </div>
+              </td>
+            </tr>
           ) : (
+            props.ready &&
             props?.tasks?.map((task: TaskInterface) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-lg"

@@ -35,8 +35,8 @@ export default function UserPostList() {
 
   const getUserPosts = async () => {
     try {
-      const items = await fetchUserPosts(selectedUser.id);
-      if (items.status === 200) {
+      const items = selectedUser && (await fetchUserPosts(selectedUser.id));
+      if (items?.status === 200) {
         setPostsData(items.data);
       }
     } catch (err) {
@@ -70,7 +70,7 @@ export default function UserPostList() {
       if (isAxiosError(err)) {
         dispatch(
           updateErrorModalMessage(
-            `${err.message} while edditing ${selectedUser.username} post`
+            `${err.message} while edditing ${selectedUser?.username} post`
           )
         );
       } else {
@@ -94,7 +94,7 @@ export default function UserPostList() {
       if (isAxiosError(err)) {
         dispatch(
           updateErrorModalMessage(
-            `${err.message} while deleting ${selectedUser.username} post`
+            `${err.message} while deleting ${selectedUser?.username} post`
           )
         );
       } else {
@@ -113,15 +113,15 @@ export default function UserPostList() {
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-5xl p-5 text-white text-center w-full font-bold">
-        <span className="text-blue-600">@{selectedUser.username}</span> Posts
+        <span className="text-blue-600">@{selectedUser?.username}</span> Posts
       </h1>
 
       <div className="flex flex-col pt-5 pb-10 gap-5 justify-center content-center w-1/2">
-        <UserCard {...selectedUser} />
+        {selectedUser && <UserCard {...selectedUser} />}
       </div>
 
       <div className="grid grid-cols-3 gap-5 pb-8">
-        {postdata?.length ? (
+        {selectedUser && postdata?.length ? (
           postdata.map((post: UserPostsInterface) => (
             <UserPostCard
               key={post.id}
@@ -145,14 +145,16 @@ export default function UserPostList() {
       </div>
 
       <EditUserModal />
-      <EditPostModal
-        isOpen={editModalOpen}
-        post={selectedPost}
-        onClose={() => setEditModalOpen(false)}
-        onEdit={handleEditPost}
-        name={selectedUser.name}
-        username={selectedUser.username}
-      />
+      {selectedUser && (
+        <EditPostModal
+          isOpen={editModalOpen}
+          post={selectedPost}
+          onClose={() => setEditModalOpen(false)}
+          onEdit={handleEditPost}
+          name={selectedUser.name}
+          username={selectedUser.username}
+        />
+      )}
       <DeletePostModal
         isOpen={deleteModalOpen}
         onCancel={() => setDeleteModalOpen(false)}

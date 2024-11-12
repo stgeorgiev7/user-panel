@@ -1,6 +1,7 @@
 import Button from "../shared/Button";
 import { useBodyOverflow } from "../../hooks";
 import ModalWrapper from "../shared/ModalWrapper";
+import { useState, useEffect } from "react";
 
 interface DeletePostModalInterface {
   isOpen: boolean;
@@ -9,7 +10,13 @@ interface DeletePostModalInterface {
 }
 
 export default function DeletePostModal(props: DeletePostModalInterface) {
+  const [deleteButtonClicked, setDeleteButtonClicked] =
+    useState<boolean>(false);
   useBodyOverflow(props.isOpen);
+
+  useEffect(() => {
+    setDeleteButtonClicked(false);
+  }, [props.isOpen]);
   return (
     <ModalWrapper isOpen={props.isOpen}>
       <div className="relative p-4 w-full max-w-md max-h-full">
@@ -37,10 +44,14 @@ export default function DeletePostModal(props: DeletePostModalInterface) {
             <div className="flex justify-center gap-5">
               <Button
                 color="red"
-                onClick={props.onDelete}
+                onClick={() => {
+                  props.onDelete();
+                  setDeleteButtonClicked(true);
+                }}
                 text="Delete"
                 size="small"
                 type="button"
+                disabled={deleteButtonClicked}
               />
 
               <Button
