@@ -1,27 +1,26 @@
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
-  fetchUserPosts,
-  updateUserPost,
-  deleteUserPost,
-} from "../../api/requests";
+  fetchPostsByUser,
+  updatePost,
+  deletePost,
+  selectCurrentUserPosts,
+  selectPostStatus,
+} from "../../features/postSlice";
+
 import EditUserModal from "./EditUserModal";
 import UserCard from "./UserCard";
 import UserPostCard from "./UserPostCard";
 import Skeleton from "../shared/Skeleton";
-import { selectSelectedUser } from "../../features/selectedUserSlice";
+import { selectSelectedUser } from "../../features/usersSlice";
 import { UserPostsInterface } from "../../types";
 import { useEffect, useState } from "react";
 import EditPostModal from "./EditUserPostModal";
 import DeletePostModal from "./DeletePostModal";
-import {
-  updateErrorModalMessage,
-  updateErrorModalVisible,
-} from "../../features/componentsSlice";
-import { isAxiosError } from "axios";
 
 export default function UserPostList() {
   const dispatch = useAppDispatch();
-  const [postdata, setPostsData] = useState<UserPostsInterface[]>([]);
+  const postdata = useAppSelector(selectCurrentUserPosts);
+  const postStatus = useAppSelector(selectPostStatus);
   const [selectedPost, setSelectedPost] = useState<UserPostsInterface>({
     id: 0,
     userId: 0,
@@ -30,85 +29,23 @@ export default function UserPostList() {
   });
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
-
   const selectedUser = useAppSelector(selectSelectedUser);
 
-  const getUserPosts = async () => {
-    try {
-      const items = selectedUser && (await fetchUserPosts(selectedUser.id));
-      if (items?.status === 200) {
-        setPostsData(items.data);
-      }
-    } catch (err) {
-      if (isAxiosError(err)) {
-        dispatch(
-          updateErrorModalMessage(`${err.message} while getting userPosts`)
-        );
-      } else {
-        dispatch(
-          updateErrorModalMessage(
-            "An unexpected error occurred while getting userPosts"
-          )
-        );
-      }
-      dispatch(updateErrorModalVisible(true));
-    }
-  };
-
   const handleEditPost = async (editedPost: UserPostsInterface) => {
-    try {
-      const data = await updateUserPost(editedPost);
-      if (data.status === 200) {
-        const updatedUserPost = JSON.parse(data.data.body);
-        setPostsData((prev) =>
-          prev?.map((post) =>
-            post.id === updatedUserPost.id ? updatedUserPost : post
-          )
-        );
-      }
-    } catch (err) {
-      if (isAxiosError(err)) {
-        dispatch(
-          updateErrorModalMessage(
-            `${err.message} while edditing ${selectedUser?.username} post`
-          )
-        );
-      } else {
-        dispatch(updateErrorModalMessage("An unexpected error occurred"));
-      }
-      dispatch(updateErrorModalVisible(true));
-    }
+    await dispatch(updatePost(editedPost));
     setEditModalOpen(false);
   };
 
   const handleDeletePost = async () => {
-    try {
-      const data = await deleteUserPost(selectedPost.id);
-      if (data.status === 200) {
-        setPostsData((prev) =>
-          prev.filter((post) => post.id !== selectedPost.id)
-        );
-        setDeleteModalOpen(false);
-      }
-    } catch (err) {
-      if (isAxiosError(err)) {
-        dispatch(
-          updateErrorModalMessage(
-            `${err.message} while deleting ${selectedUser?.username} post`
-          )
-        );
-      } else {
-        dispatch(updateErrorModalMessage("An unexpected error occurred"));
-      }
-      dispatch(updateErrorModalVisible(true));
-    }
-
+    await dispatch(deletePost(selectedPost.id));
     setDeleteModalOpen(false);
   };
 
   useEffect(() => {
-    getUserPosts();
-  }, []);
+    if (selectedUser) {
+      dispatch(fetchPostsByUser(selectedUser.id));
+    }
+  }, [selectedUser]);
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -121,10 +58,12 @@ export default function UserPostList() {
       </div>
 
       <div className="grid grid-cols-3 gap-5 pb-8">
-        {selectedUser && postdata?.length ? (
+        {selectedUser &&
+          postStatus === "succeeded" &&
+          postdata?.length &&
           postdata.map((post: UserPostsInterface) => (
             <UserPostCard
-              key={post.id}
+              key={`${selectedUser.id}-${post.id}`}
               name={selectedUser.name}
               username={selectedUser.username}
               post={post}
@@ -138,10 +77,9 @@ export default function UserPostList() {
               }}
               hasControls
             />
-          ))
-        ) : (
-          <Skeleton number={10} />
-        )}
+          ))}
+        {postStatus === "idle" ||
+          (postStatus === "pending" && <Skeleton number={10} />)}
       </div>
 
       <EditUserModal />

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   updateSelectedUser,
   selectSelectedUser,
-} from "../../features/selectedUserSlice";
+} from "../../features/usersSlice";
 import { updateEditUserModalVisible } from "../../features/componentsSlice";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -36,6 +36,7 @@ export default function UserCard(props: UserInterface) {
 
   const handleClick = () => {
     dispatch(updateSelectedUser(props));
+    console.log("toq click li se trigerva ?!");
   };
 
   const handleEditButtonClick = () => {
@@ -51,10 +52,7 @@ export default function UserCard(props: UserInterface) {
   }, [selectedUser, props.id]);
 
   return (
-    <div
-      onClick={handleClick}
-      className="rounded-lg hover:shadow-[0_0_10px_1px_rgba(30,64,175,0.6)] transition-shadow duration-100 ease-in-out"
-    >
+    <div className="rounded-lg hover:shadow-[0_0_10px_1px_rgba(30,64,175,0.6)] transition-shadow duration-100 ease-in-out">
       <h2 id="accordion-color-heading-2">
         <button
           type="button"
@@ -63,6 +61,8 @@ export default function UserCard(props: UserInterface) {
               ? "border-b-0 bg-blue-800 rounded-b-none dark:hover:bg-blue-800 cursor-default"
               : "border-b-1"
           }`}
+          onClick={handleClick}
+          disabled={location.pathname.split("/").includes("posts")}
         >
           <div className="avatar placeholder flex gap-5 justify-center items-center">
             <UserAvatar username={props.username} />

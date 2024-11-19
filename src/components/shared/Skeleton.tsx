@@ -1,7 +1,10 @@
 export default function Skeleton(props?: { number?: number }) {
   return props?.number ? (
     [...Array(props?.number)].map((_, index: number) => (
-      <div className="flex flex-col gap-5" key={`skeleton-${index}`}>
+      <div
+        className="flex flex-col gap-5 animate-pulse"
+        key={`skeleton-${index}`}
+      >
         <div className="flex items-center justify-between">
           <div>
             <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
@@ -12,7 +15,7 @@ export default function Skeleton(props?: { number?: number }) {
       </div>
     ))
   ) : (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between animate-pulse">
       <div>
         <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
         <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>

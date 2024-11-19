@@ -5,12 +5,12 @@ import { useState, ChangeEvent, useEffect, useRef } from "react";
 import {
   selectSelectedUser,
   updateSelectedUser,
-} from "../../features/selectedUserSlice";
+} from "../../features/usersSlice";
 import {
   updateEditUserModalVisible,
   selectEditUserModalVisible,
 } from "../../features/componentsSlice";
-import { updateSingleUser } from "../../features/allUsersSlice";
+import { updateSingleUser } from "../../features/usersSlice";
 import Button from "../shared/Button";
 
 export default function EditUserModal() {

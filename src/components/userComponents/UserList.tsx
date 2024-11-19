@@ -4,14 +4,23 @@ import UserCard from "./UserCard";
 import EditUserModal from "./EditUserModal";
 import Skeleton from "../shared/Skeleton";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { updateSelectedUser } from "../../features/selectedUserSlice";
-import { selectAllUsers } from "../../features/allUsersSlice";
+import {
+  fetchUsers,
+  selectUsersStatus,
+  updateSelectedUser,
+  selectAllUsers,
+} from "../../features/usersSlice";
 
 export default function UserList() {
   const dispatch = useAppDispatch();
   const allUsers = useAppSelector(selectAllUsers);
+  const usersStatus = useAppSelector(selectUsersStatus);
 
   useEffect(() => {
+    if (usersStatus === "idle") {
+      dispatch(fetchUsers());
+    }
+
     dispatch(updateSelectedUser(null));
   }, []);
 
@@ -22,7 +31,7 @@ export default function UserList() {
       </h1>
 
       <div className="flex flex-col pt-5 pb-10 gap-5 justify-center content-center w-1/2 ">
-        {allUsers?.length ? (
+        {allUsers?.length && usersStatus === "succeeded" ? (
           allUsers.map((item: UserInterface) => (
             <UserCard key={item.id} {...item} />
           ))

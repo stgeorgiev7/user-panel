@@ -1,7 +1,20 @@
 export interface State {
-  selectedUser: UserInterface | null;
-  allUsers: UserInterface[];
-  tasks: TaskInterface[];
+  usersState: {
+    allUsers: UserInterface[];
+    selectedUser: UserInterface | null;
+    status: "idle" | "pending" | "succeeded" | "failed";
+    error: string | null;
+  };
+  tasksState: {
+    tasks: TaskInterface[];
+    status: "idle" | "pending" | "succeeded" | "failed";
+    error: string | null;
+  };
+  posts: {
+    currentUserPosts: UserPostsInterface[];
+    status: "idle" | "pending" | "succeeded" | "failed";
+    error: string | null;
+  };
   components: ComponentsInterface;
 }
 

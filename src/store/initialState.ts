@@ -1,24 +1,13 @@
 import { State } from "../types";
 
 export const initialState: State = {
-  selectedUser: {
-    id: 0,
-    name: "",
-    username: "",
-    email: "",
-    address: {
-      street: "",
-      suite: "",
-      city: "",
-      zipcode: "",
-      geo: {
-        lat: "",
-        lgn: "",
-      },
-    },
+  usersState: {
+    allUsers: [],
+    status: "idle",
+    error: null,
+    selectedUser: null,
   },
-  allUsers: [],
-  tasks: [],
+  tasksState: { tasks: [], status: "idle", error: null },
   components: {
     editUserModal: {
       visible: false,
@@ -27,5 +16,10 @@ export const initialState: State = {
       visible: false,
       message: null,
     },
+  },
+  posts: {
+    currentUserPosts: [],
+    status: "idle",
+    error: null,
   },
 };

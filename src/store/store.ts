@@ -1,16 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
-import selectedUserReducer from "../features/selectedUserSlice";
-import allUsersReducer from "../features/allUsersSlice";
+import usersReducer from "../features/usersSlice";
 import componentsReducer from "../features/componentsSlice";
 import taskSliceReducer from "../features/tasksSlice";
+import postSliceReducer from "../features/postSlice";
+import errorMiddleware from "../features/errorMiddleware";
 
 const store = configureStore({
   reducer: {
-    selectedUser: selectedUserReducer,
-    allUsers: allUsersReducer,
+    users: usersReducer,
     components: componentsReducer,
     tasks: taskSliceReducer,
+    posts: postSliceReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(errorMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

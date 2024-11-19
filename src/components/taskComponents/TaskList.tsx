@@ -1,15 +1,21 @@
 import { TaskInterface, TaskFilterInterface } from "../../types";
-import { useAppSelector } from "../../hooks";
-import { selectAllTasks } from "../../features/tasksSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import {
+  selectAllTasks,
+  selectTasksStatus,
+  fetchTasks,
+} from "../../features/tasksSlice";
 import { useEffect, useState } from "react";
 import TaskTable from "./TaskTable";
 import TablePagination from "./TablePagination";
 import TaskTableFilter from "./TaskTableFilters";
-import { selectAllUsers } from "../../features/allUsersSlice";
+import { selectAllUsers } from "../../features/usersSlice";
 
 export default function TaskList() {
   const taskData = useAppSelector(selectAllTasks);
+  const tasksStatus = useAppSelector(selectTasksStatus);
   const users = useAppSelector(selectAllUsers);
+  const dispatch = useAppDispatch();
   const [page, setPage] = useState<number>(1);
   const [filters, setFilter] = useState<TaskFilterInterface>({
     userId: null,
@@ -18,7 +24,7 @@ export default function TaskList() {
   });
   const [taskTableReady, setTaskTableReady] = useState<boolean>(false);
 
-  const filteredTasks = taskData.filter((task: TaskInterface) => {
+  const filteredTasks = taskData.tasks.filter((task: TaskInterface) => {
     const matchedUser =
       filters.userId === null || task.userId === filters.userId;
     const matchesCompleted =
@@ -47,15 +53,17 @@ export default function TaskList() {
   };
 
   useEffect(() => {
+    setTaskTableReady(tasksStatus === "succeeded");
+  }, [tasksStatus, dispatch]);
+
+  useEffect(() => {
     handlePagination();
   }, [taskData]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTaskTableReady(true);
-    }, 1500);
-
-    return () => clearTimeout(timer);
+    if (tasksStatus === "idle") {
+      dispatch(fetchTasks());
+    }
   }, []);
 
   return (
